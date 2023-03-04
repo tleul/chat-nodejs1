@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", require("./routes/auth"));
-
+app.use("/chat", require("./routes/chat"));
 const httpServer = createServer();
 const io = new Server(httpServer, {
   // options
