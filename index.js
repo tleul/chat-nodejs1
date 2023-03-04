@@ -6,7 +6,7 @@ const app = express();
 const router = express.Router();
 
 app.use((req, res, next) => {
-  console.log("Incoming ");
+  console.log(`| ->  METHOD ${req.method}  -> API ${req.url}`);
   next();
 });
 app.use(express.json({ extended: false }));

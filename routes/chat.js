@@ -1,14 +1,10 @@
 const router = require("express").Router();
 const { database } = require("../db.js");
-const { uuid } = require("uuid");
-//********  Create A thread ****************/
-//********    Send Message  ****************/
-//******** Get A Thread ********************/
-//********  Get A message ******************/
-
+const { v4: uuidv4 } = require("uuid");
 const chats = {
   id: "",
   participants: [{ id: "", userName: "", unreadCount: 0 }],
+  initiator: "",
   messages: [
     {
       id: "",
@@ -17,6 +13,28 @@ const chats = {
     },
   ],
 };
+//********  Create A thread ****************/
+
+router.post("/", (req, res) => {
+  const { recipients, from } = req.body;
+  const initiator = database.users.find((user) => user.id === from);
+  if (recipients.length && from && initiator) {
+    const newChat = {
+      id: uuidv4(),
+      participants: recipients,
+      initiator: { ...initiator },
+      messages: [],
+    };
+
+    database.chats.push(newChat);
+    res.send({ chats: database.chats });
+  }
+});
+
+//********    Send Message  ****************/
+//******** Get A Thread ********************/
+//********  Get A message ******************/
+
 router.get("/chat", (req, res) => {
   const chats = database.chats;
   res.send({ chats: chats });
