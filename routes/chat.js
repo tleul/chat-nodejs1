@@ -5,6 +5,10 @@ const chats = {
   id: "",
   participants: [{ id: "", userName: "", unreadCount: 0 }],
   initiator: "",
+  lastMessage: {
+    msg: "",
+    date: "",
+  },
   messages: [
     {
       id: "",
@@ -23,6 +27,10 @@ router.post("/", (req, res) => {
       id: uuidv4(),
       participants: recipients,
       initiator: { ...initiator },
+      lastMessage: {
+        msg: "",
+        date: new Date(),
+      },
       messages: [],
     };
 

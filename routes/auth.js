@@ -3,7 +3,8 @@ const { database } = require("../db.js");
 //**** Sign in user */
 
 router.post("/login", (req, res) => {
-  const { userName } = req.body;
+  const { userName, avatar } = req.body;
+
   if (userName && userName.length > 0) {
     const foundUser = database.users.find(
       (user) => user.userName.toString() === userName.toString()
@@ -14,9 +15,10 @@ router.post("/login", (req, res) => {
     const newUser = {
       id: Math.floor(Math.random() * 234567).toString(),
       userName: userName,
+      avatar: avatar,
     };
     database.users.push(newUser);
-    res.send({ userName: userName, id: newUser.id });
+    res.send({ userName: userName, id: newUser.id, avatar: avatar });
   } else {
     return res.status(400).send({ msg: "User Information not Satisfied" });
   }
@@ -31,7 +33,11 @@ router.post("/validate", (req, res) => {
   );
 
   if (foundUser) {
-    return res.send({ userName: foundUser.userName, id: foundUser.id });
+    return res.send({
+      userName: foundUser.userName,
+      id: foundUser.id,
+      avatar: foundUser.avatar,
+    });
   }
   return res.status(400).send({ msg: "Unauthorized" });
 });
