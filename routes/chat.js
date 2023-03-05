@@ -25,7 +25,11 @@ router.post("/", (req, res) => {
   if (recipients.length && from && initiator) {
     const newChat = {
       id: uuidv4(),
-      participants: recipients,
+      participants: database.users.filter((user) =>
+        recipients.find(
+          (recipient) => recipient.value.toString() === user.id.toString()
+        )
+      ),
       initiator: { ...initiator },
       lastMessage: {
         msg: "",
