@@ -14,6 +14,7 @@ const chats = {
       id: "",
       sender: "",
       message: "",
+      date: "",
     },
   ],
 };
@@ -39,7 +40,18 @@ router.post("/", (req, res) => {
     };
 
     database.chats.push(newChat);
-    res.send({ chats: database.chats });
+    res.send({
+      chats: database.chats.map(
+        ({ lastMessage, id, participants, initiator }) => {
+          return {
+            lastMessage,
+            id,
+            participants,
+            initiator,
+          };
+        }
+      ),
+    });
   }
 });
 
@@ -47,14 +59,27 @@ router.post("/", (req, res) => {
 //******** Get A Thread ********************/
 //********  Get A message ******************/
 
-router.get("/chat", (req, res) => {
+router.get("/", (req, res) => {
   const chats = database.chats;
-  res.send({ chats: chats });
-});
-router.get("/chat/:id", (req, res) => {
-  const chats = database.chats.find((chat) => {
-    chat.id === req.params.id;
+  res.send({
+    chats: chats.map(({ lastMessage, id, participants, initiator }) => {
+      return {
+        lastMessage,
+        id,
+        participants,
+        initiator,
+      };
+    }),
   });
-  res.send({ chats: chats });
+});
+router.get("/:id", (req, res) => {
+  const chat = database.chats.find((chat) => {
+    return chat.id === req.params.id;
+  });
+  if (chat) {
+    res.send({ messages: chat.messages });
+  } else {
+    res.send({ messages: [] });
+  }
 });
 module.exports = router;
